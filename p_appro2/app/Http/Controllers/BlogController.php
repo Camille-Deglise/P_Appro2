@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BlogFilterRequest;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
@@ -16,30 +18,30 @@ class BlogController extends Controller
         return view("blog.create");
     }
 
-    public function index(): View
+    public function store(Request $request)
+    {
+        $post = Post::create([
+                'title'=> $request->input('title'),
+                'content' => $request->input('content'),
+                'slug' => Str::slug($request->input('title'))
+            ]);
+            return redirect()->route('blog.show', ['slug'=> $post->slug, 'post' => $post->id])->with('success','L article a bien été sauvegardé');
+    }
+    public function index(BlogFilterRequest $request): View
     {
         
-        return view('blog.index', [
-        'posts' => Post::paginate(25)
-
-        ]);
-       
-        // $validator = Validator::make(
-        //     ["title"=> ""],
-        //     ["title"=> "required|min:8"]
-        // );
-        // //dd($validator->fails());
-
-        // $posts = Post::paginate(25);
-        // return view('blog.index');
+         return view('blog.index', [
+        'posts' => Post::paginate(1)
+        ]); 
     }
 
-    public function show(string $slug, string $id) : RedirectResponse | Post
+    public function show(string $slug, Post $post) : RedirectResponse | View
     {
-        $post = Post::findOrFail($id);
         if ($post->slug != $slug) {
-            return to_route('blog.show', ['slug' => $post->slug,'id'=> $post->id]);
+            return to_route('blog.show', ['slug' => $post->slug, 'post'=> $post->id]);
         }
-        return $post;
+        return view('blog.show', [
+            'post' => $post
+        ]);
     }
 }
