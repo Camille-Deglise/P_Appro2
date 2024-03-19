@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlogController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use App\Models\Post;
@@ -20,38 +21,18 @@ Route::get('/', function () {
 
 //Route préfixées avec une racine, un nom commun à toute
 //Permet de faire un changement sur plusieurs routes à un seul endroit
-Route::prefix('/blog')->name('blog.')->group(function () {
-    Route::get('/', function (Request $request){
-        
-        $post = new Post();
-        $post->title = 'Mon troisième article';
-        $post->slug = 'mon-troiseme-article';
-        $post->content = 'Mon contenu';
-        $post->save();
-        
-        //return Post::all(['id', 'title']);
-        //$posts = Post::where('id', '>', 0)->get();
+Route::prefix('/blog')->name('blog.')->controller(BlogController::class)->group(function () {
+    Route::get('/', 'index')->name('index');
 
-        //dd($posts);
-        
-        return $post;
+    Route::get('/new', 'create')->name('create');
 
-        return [
-            "link" => route('blog.show', ['slug' => 'article', 'id' => 13]),
-            
-        ];
-    })->name('index');
 
-    Route::get('/{slug}-{id}', function (string $slug, string $id, Request $request){
-        return [
-            "slug" => $slug,
-            "id"=> $id,
-            "name" => $request->input("name"),
-        ];
-    })->where([
+    Route::get('/{slug}-{id}','show')->where([
             'id'=>'[0-9]+',
             'slug'=>'[a-z0-9\-]+'
         ])->name('show');
 });
+
+
 
 
