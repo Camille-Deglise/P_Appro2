@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BlogFilterRequest;
 use App\Http\Requests\CreatePostRequest;
+use App\Models\Category;
 use App\Models\Post;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -41,10 +42,10 @@ class BlogController extends Controller
     }
 
 
-    public function index(BlogFilterRequest $request): View
+    public function index(): View
     {
          return view('blog.index', [
-        'posts' => Post::paginate(1)
+        'posts' => Post::with('tags', 'category')->paginate(10)
         ]); 
     }
 

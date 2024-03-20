@@ -8,6 +8,16 @@
    <article>
    
        <h2>{{$post->title}}</h2>
+       <p class="small">
+        @if($post->category)
+        Catégorie : {{$post->category?->name}}
+        @endif
+        @if(!$post->tags->isEmpty)
+        Tags : 
+        @foreach($post->)
+        @endif
+    
+    </p>
         <p>
             {{$post->content}}
         </p>

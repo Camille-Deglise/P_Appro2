@@ -2,7 +2,7 @@
     @csrf
     <div>
       <label for="title">Titre</label>
-      <input type="text" name="title" value="{{old('title', $post->title)}}">
+      <input type="text" id="title" name="title" value="{{old('title', $post->title)}}">
       @error('title')
          {{$message}}
       @enderror
@@ -16,7 +16,7 @@
     </div>
     <div>
       <label for="content">Contenu</label>
-      <textarea name="content">{{old('content', $post->content)}}</textarea>
+      <textarea id="content" name="content">{{old('content', $post->content)}}</textarea>
       @error('content')
       {{$message}}
     @enderror
