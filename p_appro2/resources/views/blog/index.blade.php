@@ -12,9 +12,11 @@
         @if($post->category)
         Catégorie : {{$post->category?->name}}
         @endif
-        @if(!$post->tags->isEmpty)
+        @if(!$post->tags->isEmpty())
         Tags : 
-        @foreach($post->)
+        @foreach ($post->tags as $tag)
+            <span class="badge bg-secondary">{{$tag->name}}</span>
+        @endforeach
         @endif
     
     </p>
